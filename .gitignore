@@ -220,3 +220,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# 참고용 논문 PDF는 커밋하지 않음
+docs/paper/*.pdf
+
+# 의도 조건 궤적 생성 산출물(표본 npz·체크포인트·애니메이션)은 커밋하지 않음
+data/dfl/intent_gen/

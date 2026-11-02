@@ -1,3 +1,7 @@
+> **This repository extends PAUSA with intent-conditioned counterfactual trajectory generation. See [`intent_gen/`](intent_gen/).**
+> PAUSA (below) moves every player at constant velocity to simulate the second after a delayed pass; `intent_gen/` replaces that assumption with learned generators and checks them against real movement.
+> The original PAUSA code and README are by the PAUSA authors under the Apache License 2.0 (see `LICENSE` and `NOTICE`).
+
 # Valuing La Pausa
 This is the repository for valuing optimal pass timing for football players using OBSO (Off-Ball Scoring Opportunity).
 
