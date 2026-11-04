@@ -6,7 +6,8 @@
                t+25가 구간 끝보다 앞서는 프레임을 5프레임 간격으로.
 좌표·속도는 PAUSA 로더 그대로(중심 좌표, m)이고, 공을 가진 팀이 +x로 공격하도록 180도 돌린다.
 
-    python intent_gen/build_dataset.py --data_dir ./data/dfl/elastic --out_dir ./data/dfl/intent_gen/samples
+    python intent_gen/dataset/build_dataset.py --data_dir ./data/dfl/elastic --out_dir ./data/dfl/intent_gen/samples
+    FUT_FRAMES=50 python intent_gen/dataset/build_dataset.py --out_dir ./data/dfl/intent_gen/samples_2s   # 미래 2초
 """
 import argparse
 import os
@@ -16,17 +17,17 @@ import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'pausa'))
 import loader as io  # noqa: E402
 
 GAMES = ['DFL-MAT-J03WMX', 'DFL-MAT-J03WN1', 'DFL-MAT-J03WOH', 'DFL-MAT-J03WOY',
          'DFL-MAT-J03WPY', 'DFL-MAT-J03WQQ', 'DFL-MAT-J03WR9']
-H, F = 50, 25        # past frames before t, future frames after t
+H, F = 50, int(os.environ.get('FUT_FRAMES', 25))   # past frames before t, future frames after t
 STRIDE_HOLD = 5
 PASS_EVENTS = ['pass', 'cross']
 GAIN_EVENTS = ['receive', 'interception', 'ball_recovery']
 MAX_PER_TEAM = 11
-HOLD_DIST_T, HOLD_DIST_MAX = 2.0, 3.0  # m, ball-carrier distance at t / max over the next 1 s
+HOLD_DIST_T, HOLD_DIST_MAX = 2.0, 3.0  # m, ball-carrier distance at t / max over the future window
 MAX_SPEED = 12.0                       # m/s, same outlier bound as loader.calc_player_velocities
 
 
@@ -132,7 +133,7 @@ def build_game(data_dir, game_id, gk_codes=None):
         n_jump += int(jump.sum())
         B = ball[sl] * sgn
         d_bc = np.linalg.norm(B - P[0], axis=-1)
-        # 패스 X label = carrier really keeps the ball for the next 1 s (events alone include deflections)
+        # 패스 X label = carrier really keeps the ball over the future window (events alone include deflections)
         if b == 0 and not (d_bc[H] <= HOLD_DIST_T and np.nanmax(d_bc[H:]) <= HOLD_DIST_MAX):
             drop['not_holding'] += 1
             continue

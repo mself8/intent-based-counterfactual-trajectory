@@ -1,7 +1,7 @@
 """IAD 축구판 학습·평가.
 
-    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/train.py --cond past --run past_s0
-    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/train.py --cond b_dist --run bdist_s0
+    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/training/train_iad.py --cond past --run past_s0
+    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/training/train_iad.py --cond b_dist --run bdist_s0
 
 검증 경기에서 표본 하나의 평균 오차(ADE)가 가장 낮은 체크포인트로 시험 경기를 평가한다.
 """
@@ -14,9 +14,9 @@ import time
 import numpy as np
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import harness  # noqa: E402
-from model import H, IADSoccer, prepare  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # intent_gen/
+from evaluation import harness  # noqa: E402
+from models.iad import H, IADSoccer, prepare  # noqa: E402
 
 KEYS = ['pos', 'ball', 'mask', 'team', 'gk', 'b']
 

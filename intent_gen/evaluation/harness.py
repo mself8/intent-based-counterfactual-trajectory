@@ -5,7 +5,7 @@
   패스 O (b=1): 실제로 패스한 장면
 생성기 입력은 build_dataset.py 표본(과거 2초, t 포함), 출력은 [N, S, 22, 25, 2] 미래 위치(m).
 
-    python intent_gen/harness.py --split test
+    python intent_gen/evaluation/harness.py --split test
 """
 import argparse
 import json
@@ -18,7 +18,7 @@ GAMES = ['DFL-MAT-J03WMX', 'DFL-MAT-J03WN1', 'DFL-MAT-J03WOH', 'DFL-MAT-J03WOY',
          'DFL-MAT-J03WPY', 'DFL-MAT-J03WQQ', 'DFL-MAT-J03WR9']
 SPLITS = {'test': ['DFL-MAT-J03WN1'], 'val': ['DFL-MAT-J03WR9']}
 SPLITS['train'] = [g for g in GAMES if g not in SPLITS['test'] + SPLITS['val']]
-H, F, DT = 50, 25, 0.04
+H, F, DT = 50, int(os.environ.get('FUT_FRAMES', 25)), 0.04
 DEF_BINS = [(0, 5), (5, 10), (10, 20), (20, np.inf)]
 PRESS_RADIUS = 10.0
 

@@ -1,6 +1,6 @@
 """1차 라운드 결과 집계: 기준선 + 학습 모델의 시험 경기 지표를 표로.
 
-    python intent_gen/report.py --runs past_s0 bdist_s0
+    python intent_gen/evaluation/report_iad.py --runs past_s0 bdist_s0
 """
 import argparse
 import json
@@ -9,8 +9,8 @@ import sys
 
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import harness  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # intent_gen/
+from evaluation import harness  # noqa: E402
 
 GROUPS = ['all', 'carrier', 'def_0-5m', 'def_5-10m', 'def_10-20m', 'def_20-infm', 'teammates']
 

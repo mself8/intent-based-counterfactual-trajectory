@@ -12,12 +12,13 @@ soft mask로 섞은 조건, Noise Estimator + RefineNet, DDIM 5번 건너뛰기.
   - cond='b_dist': 공 상태 b(1 = 패스 O, 0 = 패스 X)와 소유자와의 거리를 F_obs에 붙인다.
 """
 import math
+import os
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as Fn
 
-H, F, DT = 50, 25, 0.04
+H, F, DT = 50, int(os.environ.get('FUT_FRAMES', 25)), 0.04
 HIST_IDX = list(range(0, H + 1, 5))   # 11 points at 5 Hz, t-2.0 s .. t
 INT_STEPS = 5                          # intention every 0.2 s over the next 1 s
 V_SCALE, A_SCALE, R_EPS = 5.0, 5.0, 0.1

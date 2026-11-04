@@ -1,6 +1,6 @@
 """한 장면의 1초를 네 판으로 나란히 애니메이션: 실제 / PAUSA 등속(패스 X) / IAD b=패스 O / IAD b=패스 X.
 
-    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/animate_scene.py \
+    CUDA_VISIBLE_DEVICES=0 nice -n 19 /opt/conda/bin/python intent_gen/visualization/animate_scene.py \
         --game DFL-MAT-J03WMX --frame 43680 --run bdist_s0
 
 frame = 기준 프레임 t(= PAUSA pass_frame - 1). 표본(build_dataset.py)에 있는 장면만 그린다.
@@ -19,9 +19,9 @@ from matplotlib.patches import Circle, Rectangle  # noqa: E402
 import numpy as np  # noqa: E402
 import torch  # noqa: E402
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from model import DT, F, H, IADSoccer, prepare  # noqa: E402
-from train import KEYS  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # intent_gen/
+from models.iad import DT, F, H, IADSoccer, prepare  # noqa: E402
+from training.train_iad import KEYS  # noqa: E402
 
 RED, BLUE, INK, LINE = '#C8372D', '#1F5FBF', '#1A1A1A', '#B8BEC6'
 PAST_SHOW, TRAIL = 37, 25          # 1.5 s of observed past, 1 s trail
@@ -188,7 +188,7 @@ def main():
     gif = os.path.join(args.out_dir, f'{tag}.gif')
     ani.save(gif, writer=animation.PillowWriter(fps=args.fps), dpi=80)
     # H.264 mp4 via the static ffmpeg from imageio-ffmpeg (system ffmpeg's openh264 is broken; mpeg4 won't play in browsers)
-    ffs = glob.glob(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    ffs = glob.glob(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                  '.venv/lib/python*/site-packages/imageio_ffmpeg/binaries/ffmpeg*'))
     if ffs:
         subprocess.run([ffs[0], '-loglevel', 'error', '-y', '-i', gif, '-movflags', 'faststart', '-pix_fmt', 'yuv420p',
